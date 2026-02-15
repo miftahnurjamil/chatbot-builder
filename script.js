@@ -571,6 +571,10 @@ function saveNode() {
     const parentNode = findNodeInChatbot(parseInt(parentId));
     if (parentNode) {
       const newId = generateId(chatbot.menus);
+      // Initialize children array if it doesn't exist
+      if (!parentNode.children) {
+        parentNode.children = [];
+      }
       parentNode.children.push({
         id: newId,
         name: name,
