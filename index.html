@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Platform Chatbot Builder</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- GRID 1: CHATBOT LIST (20%) -->
+      <aside class="grid-chatbots">
+        <div class="grid-header">
+          <h2>PLATFORM CHATBOTS BUILDER</h2>
+        </div>
+
+        <div class="chatbot-actions">
+          <button class="btn-add-chatbot" onclick="addChatbot()">
+            + Chatbot
+          </button>
+        </div>
+
+        <div class="chatbot-container">
+          <ul class="chatbot-list" id="chatbotList"></ul>
+        </div>
+      </aside>
+
+      <!-- GRID 2: MENU TREE (40%) -->
+      <aside class="grid-menus">
+        <div class="grid-header">
+          <h3 id="menuTitle">Menu Utama</h3>
+        </div>
+
+        <div class="menu-actions">
+          <button
+            class="btn-add-menu"
+            onclick="addRootNode()"
+            id="btnAddMenu"
+            disabled
+          >
+            + Menu
+          </button>
+        </div>
+
+        <div class="menu-container">
+          <ul class="tree" id="menuTree"></ul>
+        </div>
+      </aside>
+
+      <!-- GRID 3: CONTENT DETAIL (40%) -->
+      <main class="grid-content">
+        <div class="grid-header">
+          <h3>Detail Content</h3>
+        </div>
+
+        <div id="contentPanel" class="content-panel">
+          <div class="panel-empty">
+            <p>Pilih chatbot dan menu untuk mengedit detail</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal untuk Edit Chatbot -->
+    <div id="chatbotModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="chatbotModalTitle">Edit Chatbot</h3>
+          <span class="close" onclick="closeChatbotModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <label>Nama Chatbot:</label>
+          <input
+            type="text"
+            id="chatbotName"
+            placeholder="Masukkan nama chatbot"
+          />
+
+          <label>Nomor HP:</label>
+          <input
+            type="text"
+            id="chatbotPhone"
+            placeholder="Contoh: +6227451234"
+          />
+
+          <label>Keterangan:</label>
+          <textarea
+            id="chatbotDescription"
+            placeholder="Masukkan keterangan chatbot"
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeChatbotModal()">
+            Batal
+          </button>
+          <button class="btn-save" onclick="saveChatbot()">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal untuk Edit Node -->
+    <div id="nodeModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Tambah Node</h3>
+          <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <label>Nama Node:</label>
+          <input type="text" id="nodeName" placeholder="Masukkan nama node" />
+
+          <label>Deskripsi:</label>
+          <textarea
+            id="nodeDesc"
+            placeholder="Masukkan deskripsi node"
+          ></textarea>
+
+          <label>Tipe Menu:</label>
+          <select id="nodeType">
+            <option value="Navigation">Navigation</option>
+            <option value="Proses">Proses</option>
+            <option value="Informasi">Informasi</option>
+          </select>
+
+          <label>Footer:</label>
+          <input
+            type="text"
+            id="nodeFooter"
+            placeholder="Contoh: Powered By BYFA-Z"
+          />
+
+          <label>Button Text:</label>
+          <input
+            type="text"
+            id="nodeButtonText"
+            placeholder="Contoh: Pilih Menu"
+          />
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal()">Batal</button>
+          <button class="btn-save" onclick="saveNode()">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
