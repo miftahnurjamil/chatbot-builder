@@ -386,7 +386,11 @@ function displayNodeContent(node) {
           <label>Deskripsi:</label>
           <textarea readonly>${node.description || ""}</textarea>
         </div>
-        
+  `;
+
+  // Hanya tampilkan footer dan button text jika tipe adalah Navigation
+  if (node.type === "Navigation") {
+    html += `
         <div class="form-group">
           <label>Footer:</label>
           <input type="text" value="${node.footer || ""}" readonly>
@@ -396,7 +400,10 @@ function displayNodeContent(node) {
           <label>Button Text:</label>
           <input type="text" value="${node.buttonText || ""}" readonly>
         </div>
-  `;
+    `;
+  }
+
+  html += ``;
 
   // Sub menu
   if (node.children && node.children.length > 0) {
@@ -455,10 +462,13 @@ function openAddRootModal() {
   document.getElementById("modalTitle").textContent = "Tambah Menu Utama";
   document.getElementById("nodeName").value = "";
   document.getElementById("nodeDesc").value = "";
-  document.getElementById("nodeType").value = "Navigation";
+  document.getElementById("nodeType").value = "Informasi";
   document.getElementById("nodeFooter").value = "";
   document.getElementById("nodeButtonText").value = "";
   document.getElementById("nodeModal").classList.add("show");
+
+  // Update visibility of footer and button text fields
+  updateModalFieldVisibility();
 
   // Resize textarea
   setTimeout(() => {
@@ -480,11 +490,14 @@ function openAddSubModal(parentNode) {
     `Tambah Sub Menu untuk "${parentNode.name}"`;
   document.getElementById("nodeName").value = "";
   document.getElementById("nodeDesc").value = "";
-  document.getElementById("nodeType").value = "Navigation";
+  document.getElementById("nodeType").value = "Informasi";
   document.getElementById("nodeFooter").value = "";
   document.getElementById("nodeButtonText").value = "";
   document.getElementById("nodeModal").dataset.parentId = parentNode.id;
   document.getElementById("nodeModal").classList.add("show");
+
+  // Update visibility of footer and button text fields
+  updateModalFieldVisibility();
 
   // Resize textarea
   setTimeout(() => {
@@ -501,6 +514,9 @@ function openEditModal(node) {
   document.getElementById("nodeFooter").value = node.footer || "";
   document.getElementById("nodeButtonText").value = node.buttonText || "";
   document.getElementById("nodeModal").classList.add("show");
+
+  // Update visibility of footer and button text fields
+  updateModalFieldVisibility();
 
   // Resize textarea to fit content
   setTimeout(() => {
@@ -564,6 +580,8 @@ function saveNode() {
         buttonText: buttonText,
         children: [],
       });
+      // Auto-set parent type to Navigation when it has children
+      parentNode.type = "Navigation";
     }
   } else {
     // Add root node
@@ -709,13 +727,32 @@ window.onclick = function (event) {
   }
 };
 
+// ========== MODAL FIELD VISIBILITY ==========
+function updateModalFieldVisibility() {
+  const nodeType = document.getElementById("nodeType").value;
+  const footerField = document
+    .getElementById("nodeFooter")
+    .closest(".modal-field");
+  const buttonTextField = document
+    .getElementById("nodeButtonText")
+    .closest(".modal-field");
+
+  if (nodeType === "Navigation") {
+    footerField.style.display = "block";
+    buttonTextField.style.display = "block";
+  } else {
+    footerField.style.display = "none";
+    buttonTextField.style.display = "none";
+  }
+}
+
 // ========== AUTO-RESIZE TEXTAREA ==========
 function autoResizeTextarea(textarea) {
   textarea.style.height = "auto";
   textarea.style.height = textarea.scrollHeight + "px";
 }
 
-// Initialize auto-resize for all textareas
+// Initialize auto-resize for all textareas and add type change listener
 document.addEventListener("DOMContentLoaded", () => {
   const textareas = document.querySelectorAll("textarea");
   textareas.forEach((textarea) => {
@@ -725,4 +762,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial resize in case textarea has content
     autoResizeTextarea(textarea);
   });
+
+  // Add listener for nodeType change
+  const nodeTypeSelect = document.getElementById("nodeType");
+  if (nodeTypeSelect) {
+    nodeTypeSelect.addEventListener("change", updateModalFieldVisibility);
+  }
 });

@@ -579,12 +579,15 @@ body {
   overflow-y: auto;
 }
 
+.modal-field {
+  margin-bottom: 15px;
+}
+
 .modal-body label {
   display: block;
   margin-bottom: 8px;
   color: var(--neon);
   font-weight: 600;
-  margin-top: 15px;
 }
 
 .modal-body label:first-of-type {

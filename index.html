@@ -105,35 +105,45 @@
           <span class="close" onclick="closeModal()">&times;</span>
         </div>
         <div class="modal-body">
-          <label>Nama Node:</label>
-          <input type="text" id="nodeName" placeholder="Masukkan nama node" />
+          <div class="modal-field">
+            <label>Nama Node:</label>
+            <input type="text" id="nodeName" placeholder="Masukkan nama node" />
+          </div>
 
-          <label>Deskripsi:</label>
-          <textarea
-            id="nodeDesc"
-            placeholder="Masukkan deskripsi node"
-          ></textarea>
+          <div class="modal-field">
+            <label>Deskripsi:</label>
+            <textarea
+              id="nodeDesc"
+              placeholder="Masukkan deskripsi node"
+            ></textarea>
+          </div>
 
-          <label>Tipe Menu:</label>
-          <select id="nodeType">
-            <option value="Navigation">Navigation</option>
-            <option value="Proses">Proses</option>
-            <option value="Informasi">Informasi</option>
-          </select>
+          <div class="modal-field">
+            <label>Tipe Menu:</label>
+            <select id="nodeType">
+              <option value="Informasi">Informasi</option>
+              <option value="Proses">Proses</option>
+              <option value="Navigation">Navigation</option>
+            </select>
+          </div>
 
-          <label>Footer:</label>
-          <input
-            type="text"
-            id="nodeFooter"
-            placeholder="Contoh: Powered By BYFA-Z"
-          />
+          <div class="modal-field">
+            <label>Footer:</label>
+            <input
+              type="text"
+              id="nodeFooter"
+              placeholder="Contoh: Powered By BYFA-Z"
+            />
+          </div>
 
-          <label>Button Text:</label>
-          <input
-            type="text"
-            id="nodeButtonText"
-            placeholder="Contoh: Pilih Menu"
-          />
+          <div class="modal-field">
+            <label>Button Text:</label>
+            <input
+              type="text"
+              id="nodeButtonText"
+              placeholder="Contoh: Pilih Menu"
+            />
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" onclick="closeModal()">Batal</button>
