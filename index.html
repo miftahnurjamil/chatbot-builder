@@ -22,6 +22,26 @@
         <div class="chatbot-container">
           <ul class="chatbot-list" id="chatbotList"></ul>
         </div>
+
+        <div class="deploy-section">
+          <button
+            class="btn-deploy"
+            onclick="deployChatbot()"
+            id="btnDeploy"
+            disabled
+          >
+            🚀 Deploy
+          </button>
+        </div>
+
+        <div class="validator-box" id="validatorBox">
+          <div class="validator-header">
+            <h4>📋 Validator</h4>
+          </div>
+          <div class="validator-content" id="validatorContent">
+            <p class="validator-empty">Pilih chatbot untuk validasi</p>
+          </div>
+        </div>
       </aside>
 
       <!-- GRID 2: MENU TREE (40%) -->

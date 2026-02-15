@@ -178,6 +178,9 @@ function renderChatbotList() {
     const nameDiv = document.createElement("div");
     nameDiv.className = "chatbot-name";
     nameDiv.textContent = chatbot.name;
+    if (chatbot.deployed) {
+      nameDiv.textContent += " 🚀";
+    }
     nameDiv.onclick = () => selectChatbot(chatbot.id);
     itemDiv.appendChild(nameDiv);
 
@@ -224,6 +227,7 @@ function selectChatbot(chatbotId) {
 
   renderChatbotList();
   renderMenuTree();
+  updateValidator();
 
   document.getElementById("contentPanel").innerHTML = `
     <div class="panel-empty">
@@ -603,6 +607,7 @@ function saveNode() {
 
   saveToLocalStorage();
   renderMenuTree();
+  updateValidator();
   closeModal();
 }
 
@@ -624,6 +629,7 @@ function deleteNode(nodeId) {
       }
       saveToLocalStorage();
       renderMenuTree();
+      updateValidator();
     }
   }
 }
@@ -714,6 +720,7 @@ function saveChatbot() {
 
   // Update the display
   renderChatbotList();
+  updateValidator();
 
   closeChatbotModal();
 }
@@ -773,3 +780,119 @@ document.addEventListener("DOMContentLoaded", () => {
     nodeTypeSelect.addEventListener("change", updateModalFieldVisibility);
   }
 });
+
+// ========== VALIDATOR FUNCTIONS ==========
+function validateChatbot(chatbot) {
+  const issues = [];
+
+  // Check required fields
+  if (!chatbot.name || chatbot.name.trim() === "") {
+    issues.push("Nama chatbot belum diisi");
+  }
+
+  if (!chatbot.phone || chatbot.phone.trim() === "") {
+    issues.push("Nomor HP belum diisi");
+  }
+
+  if (!chatbot.description || chatbot.description.trim() === "") {
+    issues.push("Keterangan chatbot belum diisi");
+  }
+
+  // Check menus
+  if (!chatbot.menus || chatbot.menus.length === 0) {
+    issues.push("Belum ada menu utama");
+  } else {
+    // Check each menu
+    chatbot.menus.forEach((menu) => {
+      if (!menu.description || menu.description.trim() === "") {
+        issues.push(`Menu "${menu.name}" belum ada deskripsi`);
+      }
+
+      // Validate sub-menus recursively
+      validateMenuTree(menu, issues);
+    });
+  }
+
+  return issues;
+}
+
+function validateMenuTree(node, issues) {
+  if (node.children && node.children.length > 0) {
+    node.children.forEach((child) => {
+      if (!child.description || child.description.trim() === "") {
+        issues.push(`Menu "${child.name}" belum ada deskripsi`);
+      }
+      validateMenuTree(child, issues);
+    });
+  }
+}
+
+function updateValidator() {
+  const validatorContent = document.getElementById("validatorContent");
+  const btnDeploy = document.getElementById("btnDeploy");
+
+  if (!currentChatbotId) {
+    validatorContent.innerHTML =
+      '<p class="validator-empty">Pilih chatbot untuk validasi</p>';
+    btnDeploy.disabled = true;
+    return;
+  }
+
+  const chatbot = findChatbotById(currentChatbotId);
+  if (!chatbot) {
+    validatorContent.innerHTML =
+      '<p class="validator-empty">Chatbot tidak ditemukan</p>';
+    btnDeploy.disabled = true;
+    return;
+  }
+
+  const issues = validateChatbot(chatbot);
+
+  if (issues.length === 0) {
+    validatorContent.innerHTML = `
+      <div class="validator-item">
+        <span class="validator-icon success">✓</span>
+        <span class="validator-text">Chatbot siap untuk di-deploy</span>
+      </div>
+    `;
+    btnDeploy.disabled = false;
+  } else {
+    let html = "";
+    issues.forEach((issue) => {
+      html += `
+        <div class="validator-item">
+          <span class="validator-icon error">✗</span>
+          <span class="validator-text">${issue}</span>
+        </div>
+      `;
+    });
+    validatorContent.innerHTML = html;
+    btnDeploy.disabled = true;
+  }
+}
+
+function deployChatbot() {
+  if (!currentChatbotId) {
+    alert("Pilih chatbot terlebih dahulu");
+    return;
+  }
+
+  const chatbot = findChatbotById(currentChatbotId);
+  const issues = validateChatbot(chatbot);
+
+  if (issues.length > 0) {
+    alert("Chatbot belum bisa di-deploy. Lengkapi data yang diperlukan!");
+    return;
+  }
+
+  // Mark chatbot as deployed
+  chatbot.deployed = true;
+  chatbot.deployedAt = new Date().toISOString();
+
+  saveToLocalStorage();
+
+  alert(
+    `✅ Chatbot "${chatbot.name}" berhasil di-deploy!\n\nTanggal & Waktu: ${new Date().toLocaleString("id-ID")}`,
+  );
+  renderChatbotList();
+}
